@@ -69,7 +69,7 @@ func (c *DefaultApiController) PetsIdGet(w http.ResponseWriter, r *http.Request)
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	result, err := c.service.PetsIdGet(r.Context(), id) ★ ここで DB 的な存在のバックエンドサービスを利用している
+	result, err := c.service.PetsIdGet(r.Context(), id) ★ ここで DB 的な存在のバックエンドサービスを利用している（コード上は main.go で　stub を使うように仕向けている）
 	//If an error occured, encode the error with the status code
 	if err != nil {
 		EncodeJSONResponse(err.Error(), &result.Code, w)
@@ -80,3 +80,27 @@ func (c *DefaultApiController) PetsIdGet(w http.ResponseWriter, r *http.Request)
 	
 }
 ```
+
+- ルーティングの設定っぽいけどよくわからないもの
+
+どこでも使われてない
+```
+❯ grep -r 'DefaultApiRouter' ./src | grep -v '\/\/'
+./src/go/api.go:type DefaultApiRouter interface {
+```
+
+おそらく以下のように使う。
+
+```
+  <更なる上位存在>
+         ○
+         | connect
+         ○
+ <DefaultApiRouter>
+         ○
+         | connect
+         ○
+<DefaultApiServicer>
+```
+
+無理に使う必要はなさそう
